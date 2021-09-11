@@ -19,8 +19,16 @@ class WebspaceCollectionDumper
     protected function render($template, $parameters)
     {
         //TODO set path in a more elegant way
-        $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../Resources/skeleton/'));
+        $twig = new Environment(new FilesystemLoader(
+            __DIR__ . '/../../Resources/skeleton/',
+            $this->isLambda() ? '/var/task/' : (\getcwd() . \DIRECTORY_SEPARATOR)
+        ));
 
         return $twig->render($template, $parameters);
+    }
+
+    private function isLambda(): bool
+    {
+        return false !== \getenv('LAMBDA_TASK_ROOT');
     }
 }
